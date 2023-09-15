@@ -1,24 +1,25 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UrlModule } from './url/url.module';
+import { Url } from './url/entities/url.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseConfig } from './config/database.config';
+import { config } from './config/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'url-shortener',
-      entities: [],
-      synchronize: true,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+      load: [config],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: DatabaseConfig,
     }),
     UrlModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
