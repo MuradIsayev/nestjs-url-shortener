@@ -1,31 +1,22 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Res, Body } from '@nestjs/common';
 import { UrlService } from './url.service';
-import { CreateUrlDto } from './dto/create-url.dto';
+import { ShortenUrlDto } from './dto/shorten-url.dto';
+import { Response } from 'express';
 
-@Controller('url')
+@Controller()
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
-  @Post(':urlKey')
-  create(@Param() createUrlDto: CreateUrlDto) {
-    return this.urlService.create(createUrlDto);
+  @Post('shorten')
+  create(@Body() shortenUrlDto: ShortenUrlDto) {
+    return this.urlService.shortenUrl(shortenUrlDto);
   }
 
-  @Get()
-  findAll() {
-    return this.urlService.findAll();
-  }
+  @Get(':urlKey')
+  async redirect(@Param('urlKey') urlKey: string, @Res() res: Response) {
+    const longUrl = await this.urlService.redirect(urlKey);
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.urlService.findOne(+id);
+    res.redirect(longUrl);
+    res.end();
   }
 }
