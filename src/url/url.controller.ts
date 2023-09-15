@@ -14,8 +14,8 @@ import { CreateUrlDto } from './dto/create-url.dto';
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
-  @Post()
-  create(@Body() createUrlDto: CreateUrlDto) {
+  @Post(':urlKey')
+  create(@Param() createUrlDto: CreateUrlDto) {
     return this.urlService.create(createUrlDto);
   }
 

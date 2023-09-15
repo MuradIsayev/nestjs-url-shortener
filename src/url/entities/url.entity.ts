@@ -7,18 +7,18 @@ import {
 
 @Entity()
 export class Url {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column()
+  @Column({ length: 2048, type: 'varchar' })
   longUrl: string;
 
-  @Column()
+  @Column({ unique: true, length: 64, type: 'varchar' })
   shortUrl: string;
 
-  @Column()
+  @Column({ unique: true, length: 64, type: 'varchar' })
   urlKey: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: string;
 }
